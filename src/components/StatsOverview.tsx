@@ -1,6 +1,5 @@
 import { Deadline } from '@/types/deadline';
 import { getUrgencyLevel } from '@/utils/dateUtils';
-import { Card, CardContent } from '@/components/ui/card';
 import { AlertTriangle, CheckCircle2, Clock, Target } from 'lucide-react';
 
 interface StatsOverviewProps {
@@ -16,55 +15,64 @@ export function StatsOverview({ deadlines }: StatsOverviewProps) {
 
   const stats = [
     {
-      label: 'Total Deadlines',
+      label: 'Total',
       value: total,
       icon: Target,
-      color: 'text-primary',
-      bg: 'bg-primary/10',
+      gradient: 'from-primary to-accent',
+      iconBg: 'bg-primary/10',
+      iconColor: 'text-primary',
     },
     {
       label: 'Completed',
       value: completed,
       icon: CheckCircle2,
-      color: 'text-success',
-      bg: 'bg-success/10',
+      gradient: 'from-success to-emerald-400',
+      iconBg: 'bg-success/10',
+      iconColor: 'text-success',
     },
     {
       label: 'Urgent',
       value: urgent,
       icon: AlertTriangle,
-      color: 'text-destructive',
-      bg: 'bg-destructive/10',
+      gradient: 'from-destructive to-rose-400',
+      iconBg: 'bg-destructive/10',
+      iconColor: 'text-destructive',
     },
     {
       label: 'Coming Soon',
       value: upcoming,
       icon: Clock,
-      color: 'text-warning',
-      bg: 'bg-warning/10',
+      gradient: 'from-warning to-amber-400',
+      iconBg: 'bg-warning/10',
+      iconColor: 'text-warning',
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {stats.map((stat, index) => (
-        <Card
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
+      {stats.map((stat) => (
+        <div
           key={stat.label}
-          className="animate-fade-in"
-          style={{ animationDelay: `${index * 100}ms` }}
+          className="group relative overflow-hidden rounded-2xl bg-card p-5 shadow-card transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
         >
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className={`p-2.5 rounded-lg ${stat.bg}`}>
-                <stat.icon className={`w-5 h-5 ${stat.color}`} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-xs text-muted-foreground">{stat.label}</p>
-              </div>
+          {/* Gradient accent line */}
+          <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.gradient} opacity-80`} />
+          
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-3xl font-bold text-foreground font-display">
+                {stat.value}
+              </p>
+              <p className="text-sm text-muted-foreground mt-1 font-medium">
+                {stat.label}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+            
+            <div className={`p-3 rounded-xl ${stat.iconBg} transition-transform duration-300 group-hover:scale-110`}>
+              <stat.icon className={`w-5 h-5 ${stat.iconColor}`} />
+            </div>
+          </div>
+        </div>
       ))}
     </div>
   );

@@ -10,23 +10,23 @@ interface CategoryBadgeProps {
 const categoryConfig: Record<Category, { icon: typeof BookOpen; className: string }> = {
   assignment: {
     icon: FileText,
-    className: 'bg-category-assignment/10 text-category-assignment border-category-assignment/20',
+    className: 'bg-[hsl(var(--category-assignment))]/10 text-[hsl(var(--category-assignment))] ring-[hsl(var(--category-assignment))]/20',
   },
   exam: {
     icon: GraduationCap,
-    className: 'bg-category-exam/10 text-category-exam border-category-exam/20',
+    className: 'bg-[hsl(var(--category-exam))]/10 text-[hsl(var(--category-exam))] ring-[hsl(var(--category-exam))]/20',
   },
   project: {
     icon: FolderKanban,
-    className: 'bg-category-project/10 text-category-project border-category-project/20',
+    className: 'bg-[hsl(var(--category-project))]/10 text-[hsl(var(--category-project))] ring-[hsl(var(--category-project))]/20',
   },
   quiz: {
     icon: BookOpen,
-    className: 'bg-category-quiz/10 text-category-quiz border-category-quiz/20',
+    className: 'bg-[hsl(var(--category-quiz))]/10 text-[hsl(var(--category-quiz))] ring-[hsl(var(--category-quiz))]/20',
   },
   other: {
     icon: HelpCircle,
-    className: 'bg-category-other/10 text-category-other border-category-other/20',
+    className: 'bg-[hsl(var(--category-other))]/10 text-[hsl(var(--category-other))] ring-[hsl(var(--category-other))]/20',
   },
 };
 
@@ -37,7 +37,7 @@ export function CategoryBadge({ category, className }: CategoryBadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border',
+        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ring-1 ring-inset transition-all',
         config.className,
         className
       )}

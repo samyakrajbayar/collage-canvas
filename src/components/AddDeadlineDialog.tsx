@@ -20,7 +20,7 @@ import {
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AddDeadlineDialogProps {
@@ -87,55 +87,61 @@ export function AddDeadlineDialog({ open, onOpenChange, onSave, editingDeadline 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] rounded-2xl border-0 shadow-2xl">
         <DialogHeader>
-          <DialogTitle className="font-display text-2xl">
-            {editingDeadline ? 'Edit Deadline' : 'Add New Deadline'}
+          <DialogTitle className="font-display text-2xl flex items-center gap-2">
+            <div className="p-2 rounded-xl gradient-primary">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            {editingDeadline ? 'Edit Deadline' : 'New Deadline'}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <div className="space-y-5 py-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title *</Label>
+            <Label htmlFor="title" className="text-sm font-semibold">Title *</Label>
             <Input
               id="title"
               placeholder="e.g., Final Exam, Research Paper"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="rounded-xl border-muted bg-muted/30 focus:bg-card transition-colors"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="course">Course *</Label>
+            <Label htmlFor="course" className="text-sm font-semibold">Course *</Label>
             <Input
               id="course"
               placeholder="e.g., CS 101, MATH 201"
               value={course}
               onChange={(e) => setCourse(e.target.value)}
+              className="rounded-xl border-muted bg-muted/30 focus:bg-card transition-colors"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description" className="text-sm font-semibold">Description</Label>
             <Textarea
               id="description"
               placeholder="Add any notes or details..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
+              className="rounded-xl border-muted bg-muted/30 focus:bg-card transition-colors resize-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Category</Label>
+              <Label className="text-sm font-semibold">Category</Label>
               <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl border-muted bg-muted/30">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   {Object.entries(categoryLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
+                    <SelectItem key={value} value={value} className="rounded-lg">
                       {label}
                     </SelectItem>
                   ))}
@@ -144,14 +150,14 @@ export function AddDeadlineDialog({ open, onOpenChange, onSave, editingDeadline 
             </div>
 
             <div className="space-y-2">
-              <Label>Priority</Label>
+              <Label className="text-sm font-semibold">Priority</Label>
               <Select value={priority} onValueChange={(v) => setPriority(v as Priority)}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl border-muted bg-muted/30">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   {Object.entries(priorityLabels).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
+                    <SelectItem key={value} value={value} className="rounded-lg">
                       {label}
                     </SelectItem>
                   ))}
@@ -162,13 +168,13 @@ export function AddDeadlineDialog({ open, onOpenChange, onSave, editingDeadline 
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Due Date *</Label>
+              <Label className="text-sm font-semibold">Due Date *</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     className={cn(
-                      'w-full justify-start text-left font-normal',
+                      'w-full justify-start text-left font-normal rounded-xl border-muted bg-muted/30',
                       !dueDate && 'text-muted-foreground'
                     )}
                   >
@@ -176,34 +182,44 @@ export function AddDeadlineDialog({ open, onOpenChange, onSave, editingDeadline 
                     {dueDate ? format(dueDate, 'MMM d, yyyy') : 'Pick a date'}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 rounded-xl" align="start">
                   <Calendar
                     mode="single"
                     selected={dueDate}
                     onSelect={setDueDate}
                     initialFocus
+                    className="rounded-xl"
                   />
                 </PopoverContent>
               </Popover>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="time">Due Time</Label>
+              <Label htmlFor="time" className="text-sm font-semibold">Due Time</Label>
               <Input
                 id="time"
                 type="time"
                 value={dueTime}
                 onChange={(e) => setDueTime(e.target.value)}
+                className="rounded-xl border-muted bg-muted/30"
               />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <div className="flex justify-end gap-3 pt-2">
+          <Button 
+            variant="ghost" 
+            onClick={() => onOpenChange(false)}
+            className="rounded-xl"
+          >
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={!title || !dueDate || !course}>
+          <Button 
+            onClick={handleSave} 
+            disabled={!title || !dueDate || !course}
+            className="rounded-xl gradient-primary border-0 shadow-lg shadow-primary/25 hover:shadow-xl transition-all"
+          >
             {editingDeadline ? 'Save Changes' : 'Add Deadline'}
           </Button>
         </div>
