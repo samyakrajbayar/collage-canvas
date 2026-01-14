@@ -7,7 +7,7 @@ import { StatsOverview } from '@/components/StatsOverview';
 import { FilterBar } from '@/components/FilterBar';
 import { EmptyState } from '@/components/EmptyState';
 import { Button } from '@/components/ui/button';
-import { Plus, GraduationCap } from 'lucide-react';
+import { Plus, GraduationCap, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Index = () => {
@@ -25,9 +25,7 @@ const Index = () => {
         return true;
       })
       .sort((a, b) => {
-        // Completed items go to the bottom
         if (a.completed !== b.completed) return a.completed ? 1 : -1;
-        // Sort by due date
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       });
   }, [deadlines, selectedCategory, showCompleted]);
@@ -57,7 +55,7 @@ const Index = () => {
     toggleComplete(id);
     const deadline = deadlines.find((d) => d.id === id);
     if (deadline) {
-      toast.success(deadline.completed ? 'Marked as pending' : 'Marked as complete! 🎉');
+      toast.success(deadline.completed ? 'Marked as pending' : 'Completed! Great work! 🎉');
     }
   };
 
@@ -66,23 +64,33 @@ const Index = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Loading...</div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center animate-pulse">
+            <GraduationCap className="w-6 h-6 text-white" />
+          </div>
+          <p className="text-muted-foreground animate-pulse">Loading...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+      <header className="sticky top-0 z-10 glass-strong">
         <div className="container max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary text-primary-foreground">
-                <GraduationCap className="w-6 h-6" />
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="p-3 rounded-2xl gradient-primary shadow-glow">
+                  <GraduationCap className="w-7 h-7 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-secondary flex items-center justify-center">
+                  <Sparkles className="w-2.5 h-2.5 text-secondary-foreground" />
+                </div>
               </div>
               <div>
-                <h1 className="font-display text-2xl font-bold text-foreground">
+                <h1 className="font-display text-2xl font-semibold text-foreground">
                   Deadline Tracker
                 </h1>
                 <p className="text-sm text-muted-foreground">
@@ -91,9 +99,14 @@ const Index = () => {
               </div>
             </div>
             
-            <Button onClick={() => setDialogOpen(true)} className="shadow-sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Deadline
+            <Button 
+              onClick={() => setDialogOpen(true)} 
+              size="lg"
+              className="rounded-xl gradient-primary border-0 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              <span className="hidden sm:inline">Add Deadline</span>
+              <span className="sm:hidden">Add</span>
             </Button>
           </div>
         </div>
@@ -112,9 +125,21 @@ const Index = () => {
           onShowCompletedChange={setShowCompleted}
         />
 
+        {/* Section header */}
+        {filteredDeadlines.length > 0 && (
+          <div className="flex items-center justify-between animate-fade-in">
+            <h2 className="text-lg font-semibold text-foreground">
+              Upcoming Deadlines
+            </h2>
+            <span className="text-sm text-muted-foreground">
+              {filteredDeadlines.filter(d => !d.completed).length} pending
+            </span>
+          </div>
+        )}
+
         {/* Deadline List */}
         {filteredDeadlines.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {filteredDeadlines.map((deadline, index) => (
               <DeadlineCard
                 key={deadline.id}
